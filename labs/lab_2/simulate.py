@@ -12,7 +12,7 @@ def main():
     zeta = 0.6
     Ts = 0.01
 
-    # Continuous State-Space
+    # Continuous State-Space (Controllable Canonical Form)
     A = np.array([[0.0, 1.0], [-wn**2, -2.0 * zeta * wn]])
     B = np.array([[0.0], [wn**2]])
     C = np.array([[1.0, 0.0]])
@@ -22,19 +22,15 @@ def main():
     Ctrbg = np.hstack((B, A @ B))
     Obsvg = np.vstack((C, C @ A))
 
-    det_C = np.linalg.det(Ctrbg)
-    det_O = np.linalg.det(Obsvg)
+    _ = np.linalg.det(Ctrbg)
+    _ = np.linalg.det(Obsvg)
 
-    # Discretize using ZOH matrix exponential
+    # Discretize using ZOH ('zoh')
     sys_cont = signal.StateSpace(A, B, C, D)
-    sys_disc = sys_cont.to_discrete(dt=Ts, method='goh') if hasattr(sys_cont, 'to_discrete') else None
+    sys_disc = sys_cont.to_discrete(dt=Ts, method='zoh')
 
-    if sys_disc is not None:
-        Ad = sys_disc.A
-        Bd = sys_disc.B
-    else:
-        Ad = linalg.expm(A * Ts)
-        Bd = np.linalg.inv(A) @ (Ad - np.eye(2)) @ B
+    Ad = sys_disc.A
+    Bd = sys_disc.B
 
     x = np.array([[0.0], [0.0]])
     u = np.array([[1.0]])
