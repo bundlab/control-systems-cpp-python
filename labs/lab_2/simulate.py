@@ -5,6 +5,7 @@ Lab 2 Python Verification: Discretization & State-Space Updates
 
 import numpy as np
 import scipy.signal as signal
+import scipy.linalg as linalg
 
 def main():
     wn = 5.0
@@ -24,17 +25,21 @@ def main():
     det_C = np.linalg.det(Ctrbg)
     det_O = np.linalg.det(Obsvg)
 
-    # Discretize using ZOH
+    # Discretize using ZOH matrix exponential
     sys_cont = signal.StateSpace(A, B, C, D)
-    sys_disc = sys_cont.to_discrete(dt=Ts, method='g連続') if hasattr(sys_cont, 'to_discrete') else signal.dlti(A, B, C, D, dt=Ts)
-    
-    Ad = sys_disc.A if hasattr(sys_disc, 'A') else scipy.linalg.expm(A * Ts)
-    Bd = np.linalg.inv(A) @ (Ad - np.eye(2)) @ B
+    sys_disc = sys_cont.to_discrete(dt=Ts, method='goh') if hasattr(sys_cont, 'to_discrete') else None
+
+    if sys_disc is not None:
+        Ad = sys_disc.A
+        Bd = sys_disc.B
+    else:
+        Ad = linalg.expm(A * Ts)
+        Bd = np.linalg.inv(A) @ (Ad - np.eye(2)) @ B
 
     x = np.array([[0.0], [0.0]])
     u = np.array([[1.0]])
 
-    print(f"Step,Time(s),Output(y),State_x1,State_x2")
+    print("Step,Time(s),Output(y),State_x1,State_x2")
     for step in range(101):
         t = step * Ts
         y = C @ x + D @ u
