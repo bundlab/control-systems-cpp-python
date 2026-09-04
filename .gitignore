@@ -1,0 +1,66 @@
+# ==========================================
+# C / C++ & Build Artifacts
+# ==========================================
+build/
+bin/
+lib/
+*.o
+*.obj
+*.so
+*.dylib
+*.a
+*.lib
+*.exe
+*.out
+*.app
+
+# ==========================================
+# CMake
+# ==========================================
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# ==========================================
+# Python & Virtual Environments
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# IDEs, Editors & OS Files
+# ==========================================
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Local Lab Outputs (CSV / Logs / Plots)
+# ==========================================
+labs/**/build/
+labs/**/*.csv
+labs/**/*.log
+labs/**/*.png
