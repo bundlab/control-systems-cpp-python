@@ -3,12 +3,10 @@
 
 #include <array>
 #include <cstddef>
-#include <iostream>
-#include <stdexcept>
 
 namespace Automation {
 
-template <stdsize_t States, stdsize_t Inputs, stdsize_t Outputs>
+template <std::size_t States, std::size_t Inputs, std::size_t Outputs>
 class StateSpaceSystem {
 public:
     using StateVector = std::array<double, States>;
@@ -29,12 +27,12 @@ public:
 
     StateVector computeDerivative(const StateVector& x, const InputVector& u) const {
         StateVector dxdt{};
-        for (stdsize_t i = 0; i < States; ++i) {
+        for (std::size_t i = 0; i < States; ++i) {
             dxdt[i] = 0.0;
-            for (stdsize_t j = 0; j < States; ++j) {
+            for (std::size_t j = 0; j < States; ++j) {
                 dxdt[i] += A_[i][j] * x[j];
             }
-            for (stdsize_t j = 0; j < Inputs; ++j) {
+            for (std::size_t j = 0; j < Inputs; ++j) {
                 dxdt[i] += B_[i][j] * u[j];
             }
         }
@@ -45,36 +43,36 @@ public:
         StateVector k1 = computeDerivative(state_, u);
 
         StateVector x_k2{};
-        for (stdsize_t i = 0; i < States; ++i) {
+        for (std::size_t i = 0; i < States; ++i) {
             x_k2[i] = state_[i] + 0.5 * dt * k1[i];
         }
         StateVector k2 = computeDerivative(x_k2, u);
 
         StateVector x_k3{};
-        for (stdsize_t i = 0; i < States; ++i) {
+        for (std::size_t i = 0; i < States; ++i) {
             x_k3[i] = state_[i] + 0.5 * dt * k2[i];
         }
         StateVector k3 = computeDerivative(x_k3, u);
 
         StateVector x_k4{};
-        for (stdsize_t i = 0; i < States; ++i) {
+        for (std::size_t i = 0; i < States; ++i) {
             x_k4[i] = state_[i] + dt * k3[i];
         }
         StateVector k4 = computeDerivative(x_k4, u);
 
-        for (stdsize_t i = 0; i < States; ++i) {
+        for (std::size_t i = 0; i < States; ++i) {
             state_[i] += (dt / 6.0) * (k1[i] + 2.0 * k2[i] + 2.0 * k3[i] + k4[i]);
         }
     }
 
     OutputVector computeOutput(const InputVector& u) const {
         OutputVector y{};
-        for (stdsize_t i = 0; i < Outputs; ++i) {
+        for (std::size_t i = 0; i < Outputs; ++i) {
             y[i] = 0.0;
-            for (stdsize_t j = 0; j < States; ++j) {
+            for (std::size_t j = 0; j < States; ++j) {
                 y[i] += C_[i][j] * state_[j];
             }
-            for (stdsize_t j = 0; j < Inputs; ++j) {
+            for (std::size_t j = 0; j < Inputs; ++j) {
                 y[i] += D_[i][j] * u[j];
             }
         }

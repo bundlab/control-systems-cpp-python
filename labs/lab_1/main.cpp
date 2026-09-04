@@ -3,23 +3,22 @@
 #include <iostream>
 
 int main() {
-    // Parameters: m = 2.0 kg, c = 0.5 Ns/m, k = 10.0 N/m
     constexpr double m = 2.0;
     constexpr double c = 0.5;
     constexpr double k = 10.0;
 
-    // State-Space Matrices
-    Automation::StateSpaceSystem<2, 1, 1>::MatrixA A = {{{0.0, 1.0}, {-k / m, -c / m}}};
-    Automation::StateSpaceSystem<2, 1, 1>::MatrixB B = {{{0.0}, {1.0 / m}}};
-    Automation::StateSpaceSystem<2, 1, 1>::MatrixC C = {{{1.0, 0.0}}};
-    Automation::StateSpaceSystem<2, 1, 1>::MatrixD D = {{{0.0}}};
+    using System = Automation::StateSpaceSystem<2, 1, 1>;
 
-    // Use braces {} instead of parentheses () to prevent C++ most vexing parse
-    Automation::StateSpaceSystem<2, 1, 1> sys{A, B, C, D};
+    System::MatrixA A = {{{0.0, 1.0}, {-k / m, -c / m}}};
+    System::MatrixB B = {{{0.0}, {1.0 / m}}};
+    System::MatrixC C = {{{1.0, 0.0}}};
+    System::MatrixD D = {{{0.0}}};
+
+    System sys(A, B, C, D);
 
     constexpr double dt = 0.01;
     constexpr int total_steps = 100;
-    Automation::StateSpaceSystem<2, 1, 1>::InputVector u = {10.0}; // 10 N step force
+    System::InputVector u = {10.0};
 
     std::cout << std::fixed << std::setprecision(6);
     std::cout << "Step,Time(s),Position(m),Velocity(m/s)\n";
