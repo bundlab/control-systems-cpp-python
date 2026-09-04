@@ -32,6 +32,6 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/labs/lab_1")
 endif()
 
 # Future subdirectories template:
-# if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/labs/lab_2")
-#     add_subdirectory(labs/lab_2)
-# endif()
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/labs/lab_2")
+    add_subdirectory(labs/lab_2)
+endif()
