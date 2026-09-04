@@ -1,0 +1,66 @@
+name: C++ & Python Control Systems CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python Environment
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy matplotlib
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build g++
+
+      - name: Configure CMake
+        run: |
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -G Ninja
+
+      - name: Build C++ Targets
+        run: |
+          cmake --build build --config Release
+
+      - name: Run C++ Simulations & Lab Scripts
+        run: |
+          # Test Lab 1 executable if compiled
+          if [ -f ./build/labs/lab_1/lab1_sim ]; then
+            echo "Running Lab 1 C++ Simulation..."
+            ./build/labs/lab_1/lab1_sim
+          fi
+
+          # Test Lab 2 executable if compiled
+          if [ -f ./build/labs/lab_2/lab2_sim ]; then
+            echo "Running Lab 2 C++ Simulation..."
+            ./build/labs/lab_2/lab2_sim
+          fi
+
+      - name: Execute Python Verification Scripts
+        run: |
+          # Run Python validation scripts if present
+          if [ -f labs/lab_1/simulate.py ]; then
+            echo "Executing Lab 1 Python Verification..."
+            python3 labs/lab_1/simulate.py
+          fi
+
+          if [ -f labs/lab_2/simulate.py ]; then
+            echo "Executing Lab 2 Python Verification..."
+            python3 labs/lab_2/simulate.py
+          fi
